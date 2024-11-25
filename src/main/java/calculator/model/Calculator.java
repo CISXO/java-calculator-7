@@ -1,12 +1,11 @@
 package calculator.model;
 
-import calculator.constants.DelimiterConstants;
 import calculator.utils.AddEntryValidator;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class Calculator {
 
@@ -44,14 +43,13 @@ public class Calculator {
 
     public void parsingCalculatorInput(String parsingInputString) {
         String customDelimiters = String.join("", custom.getCustomSet());
+        StringTokenizer stringTokenizer = new StringTokenizer(parsingInputString, customDelimiters);
 
-        Arrays.stream(parsingInputString.split(DelimiterConstants.CUSTOM_PREFIX + customDelimiters + DelimiterConstants.CUSTOM_SUFFIX))
-                .map(String::trim)
-                .filter(entry -> !entry.isEmpty())
-                .forEach(entry -> {
-                    addEntryValidator.validateNumericEntry(entry);
-                    addCalculatorEntry(entry);
-                });
+        while (stringTokenizer.hasMoreTokens()) {
+            String addEntry = stringTokenizer.nextToken();
+            addEntryValidator.validateNumericEntry(addEntry);
+            addCalculatorEntry(addEntry);
+        }
     }
 
     public void reset() {
