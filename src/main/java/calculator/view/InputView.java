@@ -1,5 +1,7 @@
 package calculator.view;
 
+import calculator.constants.DelimiterConstants;
+import calculator.constants.InputConstants;
 import calculator.utils.InputViewValidator;
 import camp.nextstep.edu.missionutils.Console;
 
@@ -26,16 +28,12 @@ public class InputView {
 
     private void resultInput() {
         if (isCustom()) {
-            inputName = inputName.substring(5);
+            inputName = inputName.substring(InputConstants.SUBSTRING_BIASIS.getValue());
         }
     }
 
     private Boolean isCustom() {
-        if (!hasInputCustomLength()) {
-            return false;
-        }
-
-        if (!hasCustomDelimeter()) {
+        if (!hasInputCustomLength() || !hasCustomDelimeter()) {
             return false;
         }
 
@@ -50,17 +48,17 @@ public class InputView {
     }
 
     private boolean hasInputCustomLength() {
-        return inputName.length() > 4;
+        return inputName.length() >= InputConstants.SUBSTRING_BIASIS.getValue();
     }
 
     private boolean hasCustomDelimeter() {
-        String prefix = inputName.substring(0, 2);
-        String suffix = inputName.substring(3, 5);
-        return prefix.equals("//") && suffix.equals("\\n");
+        String prefix = inputName.substring(InputConstants.PREFIX_START_DIGIT.getValue(), InputConstants.PREFIX_END_DIGIT.getValue());
+        String suffix = inputName.substring(InputConstants.SUBFIX_START_DIGIT.getValue(), InputConstants.SUBFIX_END_DIGIT.getValue());
+        return prefix.equals(DelimiterConstants.DELIMITER_START_ENTRY.getMessage()) && suffix.equals(DelimiterConstants.DELIMITER_END_ENTRY.getMessage());
     }
 
     private String getParsingCustom() {
-        return inputName.substring(2, 3);
+        return inputName.substring(InputConstants.PREFIX_END_DIGIT.getValue(), InputConstants.SUBFIX_START_DIGIT.getValue());
     }
 
 }

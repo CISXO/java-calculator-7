@@ -1,27 +1,35 @@
 package calculator.model;
 
+import calculator.constants.DelimiterConstants;
+
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Custom {
-    private static final String INITIAL_CUSTOM_COLON = ":";
-    private static final String INITIAL_CUSTOM_COMMA = ",";
 
     private final HashSet<String> customSet;
 
     public Custom() {
         this.customSet = new HashSet<>();
-        this.customSet.add(INITIAL_CUSTOM_COLON);
-        this.customSet.add(INITIAL_CUSTOM_COMMA);
+        initializeDefaultCustomSet();
+    }
+
+    private void initializeDefaultCustomSet() {
+        customSet.add(DelimiterConstants.INITIAL_CUSTOM_COLON.getMessage());
+        customSet.add(DelimiterConstants.INITIAL_CUSTOM_COMMA.getMessage());
     }
 
     public void addCustomSet(String customData) {
-        if (!customSet.isEmpty()) {
-            customSet.add(customData);
-        }
+        customSet.add(customData);
     }
 
-    public HashSet<String> getCustomSet() {
-        return customSet;
+    public Set<String> getCustomSet() {
+        return Collections.unmodifiableSet(customSet);
     }
 
+    public void resetCustomSet() {
+        customSet.clear();
+        initializeDefaultCustomSet();
+    }
 }

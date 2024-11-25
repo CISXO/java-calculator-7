@@ -1,46 +1,57 @@
 package calculator.controller;
 
 import calculator.model.Calculator;
-import calculator.model.Custom;
-import calculator.utils.AddEntryValidator;
 import calculator.view.InputView;
 import calculator.view.OutputView;
-import java.util.StringTokenizer;
 
 public class CalculatorController {
-    private final InputView inputView;
-    private final OutputView outputView;
+    private final InputView inputView = new InputView();
+    private final OutputView outputView = new OutputView();
     private final Calculator calculator;
-    private final Custom custom;
-    private final AddEntryValidator addEntryValidator = new AddEntryValidator();
 
-    public CalculatorController() {
-        this.inputView = new InputView();
-        this.outputView = new OutputView();
-        this.custom = new Custom();
-        this.calculator = new Calculator();
+    public CalculatorController(Calculator calculator) {
+        this.calculator = calculator;
     }
 
     public void run() {
-        outputView.printReadNumberMessage();
-        inputView.readInputString();
+        try {
+            process(this::readInput);
+            process(this::addCustomSet);
+            process(this::parsingCalculatorInput);
+            process(this::calculateResult);
+        } finally {
+            resetCalculator();
+        }
+    }
 
-        custom.addCustomSet(inputView.getCustom());
-        parsingCalculatorInput(inputView.getInputString());
+    private void resetCalculator() {
+        calculator.reset();
+    }
+
+    private void calculateResult() {
         outputView.printCalculatorResultMessage(calculator.getResult());
     }
 
-    private void parsingCalculatorInput(String parsingInputString) {
+    private void parsingCalculatorInput() {
+        calculator.parsingCalculatorInput(inputView.getInputString());
+    }
 
-        String customDelimiters = String.join("", custom.getCustomSet());
-        StringTokenizer stringTokenizer = new StringTokenizer(parsingInputString, customDelimiters);
+    private void addCustomSet() {
+        calculator.addCustomSet(inputView.getCustom());
+    }
 
-        while (stringTokenizer.hasMoreTokens()) {
-            String addEntry = stringTokenizer.nextToken();
-            addEntryValidator.validateNumericEntry(addEntry);
-            calculator.setAddEntry(addEntry);
+    private void readInput() {
+        outputView.printReadNumberMessage();
+        inputView.readInputString();
+    }
+
+    private void process(Runnable action) {
+        try {
+            action.run();
+        } catch (IllegalArgumentException e) {
+            outputView.exception(e);
+            throw e;
         }
-
     }
 
 }

@@ -17,4 +17,9 @@ public class OutputView {
     public void printCalculatorResultMessage(BigInteger result) {
         printMessage(PRINT_CALCULATOR_RESULT_MESSAGE + result);
     }
+
+    public void exception(IllegalArgumentException e) {
+        printMessage(e.getMessage());
+    }
+
 }
